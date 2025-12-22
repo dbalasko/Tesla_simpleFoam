@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  10                                    |
+|   \\  /    A nd           | Website:  www.openfoam.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      surfaceFeaturesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+combined.stl
+{
+    // Extract features based on angle between faces
+    extractionMethod    extractFromSurface;
+    
+    extractFromSurfaceCoeffs
+    {
+        // Only extract sharp edges (normal angle > this value)
+        includedAngle       150;  // Default is 150 degrees
+    }
+    
+    // Which surfaces to extract from
+    subsetFeatures
+    {
+        // Only extract features from car patches, NOT box patches
+        nonManifoldEdges    no;
+        openEdges           no;
+        
+        // Include only specific patches (car surfaces)
+        includedPatches
+        (
+            "car_.*"  // Regex: matches car_body, car_wheels, etc.
+        );
+        
+        // Exclude box patches explicitly
+        excludedPatches
+        (
+            xMin
+            xMax
+            yMin
+            yMax
+            zMin
+            zMax
+        );
+    }
+    
+    // Write options
+    writeObj            yes;  // Write features as .obj for viewing
+    writeVTK            yes;  // Write as VTK for ParaView
+}
+
+// ************************************************************************* //

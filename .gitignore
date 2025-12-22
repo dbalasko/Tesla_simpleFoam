@@ -1,0 +1,47 @@
+# Time directories (except 0)
+[1-9]*
+[0-9][0-9]*
+[0-9].[0-9]*
+
+# Processor directories
+processor*
+
+# Mesh (will be regenerated)
+constant/polyMesh/
+constant/extendedFeatureEdgeMesh/
+
+# Intermediate/temporary STL files
+constant/triSurface/windtunnel.stl
+constant/triSurface/combined.stl
+
+# Post-processing
+postProcessing/
+VTK/
+*.vtk
+*.vtu
+*.foam
+
+# Log files
+log.*
+*.log
+*.logfile
+
+# Backup files
+*~
+*.backup
+*.bak
+*.orig
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Paraview state files (optional)
+*.pvsm
+*.OpenFOAM
+
+# Dynamic code
+dynamicCode/
+
+# Geometry due to size limit
+Geom/
