@@ -8,7 +8,7 @@ OpenFOAM external aerodynamics case using cfMesh and simpleFoam.
 
 Due to file size limitations, geometry files are hosted separately:
 
-**Download:** [Zenodo Dataset](https://webdisk.ads.mwn.de/Handlers/AnonymousDownload.ashx?folder=5cbf4ed6)
+**Download:** [LRZ Link](https://webdisk.ads.mwn.de/Handlers/AnonymousDownload.ashx?folder=5cbf4ed6)
 
 Files needed:
 - `tesla_combined.stl` (1.36 GB) → Place in `Geom/`
