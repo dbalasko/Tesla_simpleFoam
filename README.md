@@ -23,11 +23,12 @@ cd Tesla_simpleFoam
 # Place them in the Geom/ directory
 
 # 3. Generate mesh
-./Allclean
+./Allclean - WIP
 ./runMesh
 
 # 4. Run simulation
 ./Allrun - WIP
+#NOTE: Currently 0.orig has a bug at decomposePar, so it has to be renamed to 0, BUT be careful, the current Allclean deletes the 0 folder
 ```
 
 ## Case Details - WIP
