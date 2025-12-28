@@ -3,16 +3,12 @@ cd "${0%/*}" || exit                                # Run from this directory
 . ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
 #------------------------------------------------------------------------------
 
-# Alternative decomposeParDict name:
-decompDict="-decomposeParDict system/decomposeParDict.6"
-## Standard decomposeParDict name:
-# unset decompDict
+decomposePar
 
+foamJob -parallel -screen potentialFoam
 
-runParallel $decompDict potentialFoam -writephi
+foamJob -parallel -screen simpleFoam
 
-runParallel $decompDict $(getApplication)
-
-runApplication reconstructPar 
+reconstructPar 
 
 #------------------------------------------------------------------------------
