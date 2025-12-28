@@ -2,16 +2,13 @@
 simpleFoam simulation of a simplified Tesla model S
 # Tesla Model S CFD Simulation
 
-OpenFOAM external aerodynamics case using cfMesh and simpleFoam.
+OpenFOAM external aerodynamics case using snappyHexMesh and simpleFoam.
 
 ## Geometry Files
 
 Due to file size limitations, geometry files are hosted separately:
 
-**Download:** [LRZ Link](https://syncandshare.lrz.de/getlink/fi2GX3m9pym1az6RFtpCXz/)
-
-Files needed:
-- `tesla_combined.stl` (1.36 GB) → Place in `Geom/`
+**Download:** [LRZ Link](https://syncandshare.lrz.de/getlink/fiJyvQSdnxBFL1h5bAwA6j/)
 
 ## Quick Start
 ```bash
@@ -20,7 +17,7 @@ git clone https://github.com/dbalasko/Tesla_simpleFoam.git
 cd Tesla_simpleFoam
 
 # 2. Download geometry files from link above
-# Place them in the Geom/ directory
+# Place them in constant/geometry
 
 # 3. Generate mesh
 ./Allclean - WIP

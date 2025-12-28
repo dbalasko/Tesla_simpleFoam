@@ -1,47 +1,39 @@
 /*--------------------------------*- C++ -*----------------------------------*\
-| =========                 |                                                 |
-| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2506                                 |
-|   \\  /    A nd           | Website:  www.openfoam.com                      |
-|    \\/     M anipulation  |                                                 |
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version     2.0;
     format      ascii;
     class       dictionary;
     object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- To be more comparable to v2406 bug-fix branch disable the
-//- near-wall distance fix (see v2412 release notes about 'Wall distance')
-//OptimisationSwitches
-//{
-//    useCombinedWallPatch    0;
-//}
-
 application     simpleFoam;
 
-startFrom       startTime;
+startFrom       latestTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         500;
+endTime         100;
 
 deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   100;
+writeInterval   50;
 
 purgeWrite      0;
 
-writeFormat     binary;
+writeFormat     ascii;
 
-writePrecision  6;
+writePrecision   8;
 
 writeCompression off;
 
@@ -51,29 +43,43 @@ timePrecision   6;
 
 runTimeModifiable true;
 
+// adjustTimeStep  yes;
+
+// maxCo           1;
+
 functions
 {
-    #include "streamLines"
-    #include "wallBoundedStreamLines"
-    #include "cuttingPlane"
-    #include "forceCoeffs"
-    #include "ensightWrite"
-
-    #include "solverInfo"
-    #include "graphFunctionObject"
-    #include "foamReport"
-
-    yPlus
-    {
-        type            yPlus;
-        libs            (fieldFunctionObjects);
-        
-        // Write y+ field to time directories
-        writeControl    writeTime;
-        
-        // Optional: specify patches
-        // patches         (car_body "Wheel_.*");
-    }
+	#includeFunc	residuals;
+	
+    	wallShearStress
+    	{
+       	    type                wallShearStress;
+       	    functionObjectLibs  ("libfieldFunctionObjects.so");
+            writeControl        timeStep;
+       	    writeInterval       50;
+    	}
+    	
+    	/*forceCoeffs
+	{
+	    type        forceCoeffs;
+	    libs        ("libforces.so");
+	    patches	(body optSurface wheelFL wheelRL);
+	    
+            writeControl timeStep;
+            writeInterval 1;
+	    
+	    CofR	(5.742 0.144 0.935);
+    	    liftDir     (0 1 0);
+	    dragDir     (1 0 0);
+	    pitchAxis   (0 0 1);
+	    
+	    magUInf	40;
+	    lRef	1;
+	    Aref	0.09556;
+	    rho		rhoInf;
+	    rhoInf	1;
+	}*/
+	
 }
 
 // ************************************************************************* //

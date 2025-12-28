@@ -4,18 +4,16 @@
    \\    /   O peration     | Website:  https://openfoam.org
     \\  /    A nd           | Version:  10
      \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    For specified fields, writes out the initial residuals for the first
+    solution of each time step; for non-scalar fields (e.g. vectors), writes
+    the largest of the residuals for each component (e.g. x, y, z).
+
 \*---------------------------------------------------------------------------*/
-FoamFile
-{
-    format      ascii;
-    class       dictionary;
-    object      meshQualityDict;
-}
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeEtc "caseDicts/mesh/generation/meshQualityDict.cfg"
+#includeEtc "caseDicts/postProcessing/numerical/residuals.cfg"
 
-//- minFaceWeight (0 -> 0.5)
-//minFaceWeight 0.02;
+fields  (U p);
 
 // ************************************************************************* //

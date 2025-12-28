@@ -1,8 +1,8 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  10                                    |
-|   \\  /    A nd           | Website:  www.openfoam.org                      |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -10,49 +10,122 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      surfaceFeaturesDict;
+    object      surfaceFeatureExtractDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-combined.stl
+body.stl
 {
-    // Extract features based on angle between faces
     extractionMethod    extractFromSurface;
-    
+
     extractFromSurfaceCoeffs
     {
-        // Only extract sharp edges (normal angle > this value)
-        includedAngle       150;  // Default is 150 degrees
+        // Mark edges whose adjacent surface normals are at an angle less
+        // than includedAngle as features
+        // - 0  : selects no edges
+        // - 180: selects all edges
+        includedAngle   150;
     }
-    
-    // Which surfaces to extract from
-    subsetFeatures
-    {
-        // Only extract features from car patches, NOT box patches
-        nonManifoldEdges    no;
-        openEdges           no;
-        
-        // Include only specific patches (car surfaces)
-        includedPatches
-        (
-            "car_.*"  // Regex: matches car_body, car_wheels, etc.
-        );
-        
-        // Exclude box patches explicitly
-        excludedPatches
-        (
-            xMin
-            xMax
-            yMin
-            yMax
-            zMin
-            zMax
-        );
-    }
-    
+
     // Write options
-    writeObj            yes;  // Write features as .obj for viewing
-    writeVTK            yes;  // Write as VTK for ParaView
+    writeFeatureEdgeMesh    yes;
+    // Write features to obj format for postprocessing
+    writeObj                yes;
 }
+
+optSurface.stl
+{
+    extractionMethod    extractFromSurface;
+
+    extractFromSurfaceCoeffs
+    {
+        // Mark edges whose adjacent surface normals are at an angle less
+        // than includedAngle as features
+        // - 0  : selects no edges
+        // - 180: selects all edges
+        includedAngle   150;
+    }
+
+    // Write options
+    writeFeatureEdgeMesh    yes;
+    // Write features to obj format for postprocessing
+    writeObj                yes;
+}
+
+wheelFL.stl
+{
+    extractionMethod    extractFromSurface;
+
+    extractFromSurfaceCoeffs
+    {
+        // Mark edges whose adjacent surface normals are at an angle less
+        // than includedAngle as features
+        // - 0  : selects no edges
+        // - 180: selects all edges
+        includedAngle   150;
+    }
+
+    // Write options
+    writeFeatureEdgeMesh    yes;
+    // Write features to obj format for postprocessing
+    writeObj                yes;
+}
+
+wheelFR.stl
+{
+    extractionMethod    extractFromSurface;
+
+    extractFromSurfaceCoeffs
+    {
+        // Mark edges whose adjacent surface normals are at an angle less
+        // than includedAngle as features
+        // - 0  : selects no edges
+        // - 180: selects all edges
+        includedAngle   150;
+    }
+
+    // Write options
+    writeFeatureEdgeMesh    yes;
+    // Write features to obj format for postprocessing
+    writeObj                yes;
+}
+
+/*wheelRL.stl
+{
+    extractionMethod    extractFromSurface;
+
+    extractFromSurfaceCoeffs
+    {
+        // Mark edges whose adjacent surface normals are at an angle less
+        // than includedAngle as features
+        // - 0  : selects no edges
+        // - 180: selects all edges
+        includedAngle   150;
+    }
+
+    // Write options
+    writeFeatureEdgeMesh    yes;
+    // Write features to obj format for postprocessing
+    writeObj                yes;
+}
+
+wheelRR.stl
+{
+    extractionMethod    extractFromSurface;
+
+    extractFromSurfaceCoeffs
+    {
+        // Mark edges whose adjacent surface normals are at an angle less
+        // than includedAngle as features
+        // - 0  : selects no edges
+        // - 180: selects all edges
+        includedAngle   150;
+    }
+
+    // Write options
+    writeFeatureEdgeMesh    yes;
+    // Write features to obj format for postprocessing
+    writeObj                yes;
+}*/
 
 // ************************************************************************* //
