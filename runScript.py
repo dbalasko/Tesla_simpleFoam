@@ -21,15 +21,15 @@ args = parser.parse_args()
 # Input Parameters
 # =============================================================================
 
-U0 = 40
-A0 = 2.1 	## Find actual frontal area
-p0 = 0.0
-nuTilda0 = 3.0e-5	## Unsure what turbulence intensity should be (originally 1e-5 but for marine application)
+U0 = 40		#! Inlet velocity
+A0 = 2.1 	##! TODO Find actual frontal area, but approximately around 2.1 m^2
+p0 = 0.0	#! Since incompressible
+nuTilda0 = 3.0e-5	##! TODO Unsure what turbulence intensity should be (originally 1e-5 but this was a marine application)
 
 # Set the parameters for optimization
 daOptions = {
     "solverName": "DASimpleFoam",
-    "designSurfaces": ["optSurface"],
+    "designSurfaces": ["optSurface"],		#! Updated to our desired surface (rear window/quarter)
     "primalMinResTol": 1e-8,
     "primalMinResTolDiff": 1e3,
     "primalBC": {
@@ -42,7 +42,7 @@ daOptions = {
         "CD": {
             "type": "force",
             "source": "patchToFace",
-            "patches": ["hull"],
+            "patches": ["body", "optSurface", "wheelFL", "wheelRL"],	#! Updated patches
             "directionMode": "fixedDirection",
             "direction": [1.0, 0.0, 0.0],
             "scale": 1.0 / 0.5 / U0 / U0 / A0,
@@ -58,7 +58,7 @@ daOptions = {
 }
 
 
-## TODO do we need this?
+##! TODO not sure if we need this, as simulating a symmetry condition already?
 # mesh warping parameters, users need to manually specify the symmetry plane
 meshOptions = {
     "gridFile": os.getcwd(),
@@ -83,7 +83,7 @@ class Top(Multipoint):
         self.add_subsystem("mesh", dafoam_builder.get_mesh_coordinate_subsystem())
 
         # add the geometry component (FFD)
-        # TODO need to make the FFD
+        ##! TODO need to make the FFD!
         self.add_subsystem("geometry", OM_DVGEOCOMP(file="FFD/JBCFFD_32.xyz", type="ffd"))
 
         # add a scenario (flow condition) for optimization, we pass the builder
@@ -110,7 +110,7 @@ class Top(Multipoint):
         self.geometry.nom_setConstraintSurface(tri_points)
 
         # select the FFD points to move
-        # TODO needs to be updated for our case?
+        ##! TODO needs to be updated for our case?
         pts = self.geometry.DVGeo.getLocalIndex(0)
         indexList = []
         indexList.extend(pts[8:12, 0, 0:4].flatten())
@@ -128,7 +128,7 @@ class Top(Multipoint):
         self.geometry.nom_addLinearConstraintsShape("reflect", indSetA, indSetB, factorA=1.0, factorB=1.0)
 
         # setup the volume and thickness constraints
-        # TODO don't really need these (perhaps a volume constraint of car)?
+        ##! TODO don't really need these (perhaps a volume constraint of car)?
         leList = [
             [4.90000000, 0.00000000, -0.41149880],
             [4.90000000, 0.00000000, -0.40347270],
@@ -180,13 +180,13 @@ class Top(Multipoint):
         self.geometry.nom_addVolumeConstraint("volcon", leList, teList, nSpan=25, nChord=50)
 
         # Thickness constraint for lateral thickness
-        # TODO don't need this
+        ##! TODO don't need this
         leList = [[5.01, 0.0000, -0.001], [5.01, 0.0000, -0.410]]
         teList = [[6.2, 0.0000, -0.001], [6.2, 0.0000, -0.410]]
         self.geometry.nom_addThicknessConstraints2D("thickcon1", leList, teList, nSpan=8, nChord=5)
 
         # Thickness constraint for propeller shaft
-        # TODO don't need this
+        ##! TODO don't need this
         leList = [[6.8, 0.0000, -0.302], [6.8, 0.0000, -0.265]]
         teList = [[6.865, 0.0000, -0.302], [6.865, 0.0000, -0.265]]
         self.geometry.nom_addThicknessConstraints2D("thickcon2", leList, teList, nSpan=5, nChord=5)
@@ -207,6 +207,8 @@ class Top(Multipoint):
         self.add_constraint("geometry.volcon", lower=1.0, scaler=1.0)
         self.add_constraint("geometry.reflect", equals=0.0, scaler=1.0, linear=True)
 
+
+#! Don't need to change anything below I believe
 
 # OpenMDAO setup
 prob = om.Problem()

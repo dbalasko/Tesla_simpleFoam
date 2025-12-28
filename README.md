@@ -15,7 +15,7 @@ git clone https://github.com/dbalasko/Tesla_simpleFoam.git
 cd Tesla_simpleFoam
 
 # 2. Download geometry files from link above
-# Place them in constant/geometr
+Place them in constant/geometry
 
 # 3. Generate mesh
 ./Allclean
@@ -32,5 +32,5 @@ mpirun -np 6 python runScript.py 2>&1 | tee logOpt.txt
 - Solver: DAsimpleFoam (steady-state RANS)
 - Turbulence: k-omega SST
 - Mesher: snappyHexMesh
-- Domain: 75m × 6m × 5m wind tunnel (symmetry)
+- Domain: 75m × 6m × 5m wind tunnel (symmetry across centreline of car)
 
