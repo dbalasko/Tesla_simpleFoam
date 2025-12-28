@@ -20,6 +20,7 @@ VTK/
 *.vtk
 *.vtu
 *.foam
+*.vts
 
 # Log files
 log
@@ -46,3 +47,5 @@ dynamicCode/
 
 # Geometry due to size limit
 Geom/
+
+

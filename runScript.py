@@ -22,7 +22,7 @@ args = parser.parse_args()
 # =============================================================================
 
 U0 = 40		#! Inlet velocity
-A0 = 2.1 	##! TODO Find actual frontal area, but approximately around 2.1 m^2
+A0 = 2.1 	##! TODO Find actual frontal area, but approximately around 2.1 m^2 from internet
 p0 = 0.0	#! Since incompressible
 nuTilda0 = 3.0e-5	##! TODO Unsure what turbulence intensity should be (originally 1e-5 but this was a marine application)
 
@@ -83,8 +83,8 @@ class Top(Multipoint):
         self.add_subsystem("mesh", dafoam_builder.get_mesh_coordinate_subsystem())
 
         # add the geometry component (FFD)
-        ##! TODO need to make the FFD!
-        self.add_subsystem("geometry", OM_DVGEOCOMP(file="FFD/JBCFFD_32.xyz", type="ffd"))
+        #! Updated the FFD to be around our optimsation surface, increased number of points
+        self.add_subsystem("geometry", OM_DVGEOCOMP(file="FFD/teslaFFD.xyz", type="ffd"))
 
         # add a scenario (flow condition) for optimization, we pass the builder
         # to the scenario to actually run the flow and adjoint

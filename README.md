@@ -21,10 +21,15 @@ Place them in constant/geometry
 ./Allclean
 ./preProcessing.sh
 
+
 # 4. Start docker for DAFoam
 docker run -it --rm -u dafoamuser --mount "type=bind,src=$(pwd),target=/home/dafoamuser/mount" -w /home/dafoamuser/mount dafoam/opt-packages:v4.0.3 bash
 
-# 5. Run simulation
+# 5. Create free-form deformation points
+python3 FFD/genFFD.py
+# Can use convert_ffd_to_vtk.py to generate a file which can be viewed in paraview (sanity check)
+
+# 6. Run simulation
 mpirun -np 6 python runScript.py 2>&1 | tee logOpt.txt
 
 
