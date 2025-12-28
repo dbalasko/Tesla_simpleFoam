@@ -21,15 +21,15 @@ args = parser.parse_args()
 # Input Parameters
 # =============================================================================
 
-U0 = 1.179
-A0 = 12.2206
+U0 = 40
+A0 = 2.1 	## Find actual frontal area
 p0 = 0.0
-nuTilda0 = 1.0e-4
+nuTilda0 = 3.0e-5	## Unsure what turbulence intensity should be (originally 1e-5 but for marine application)
 
 # Set the parameters for optimization
 daOptions = {
     "solverName": "DASimpleFoam",
-    "designSurfaces": ["hull"],
+    "designSurfaces": ["optSurface"],
     "primalMinResTol": 1e-8,
     "primalMinResTolDiff": 1e3,
     "primalBC": {
@@ -57,6 +57,8 @@ daOptions = {
     },
 }
 
+
+## TODO do we need this?
 # mesh warping parameters, users need to manually specify the symmetry plane
 meshOptions = {
     "gridFile": os.getcwd(),
@@ -81,6 +83,7 @@ class Top(Multipoint):
         self.add_subsystem("mesh", dafoam_builder.get_mesh_coordinate_subsystem())
 
         # add the geometry component (FFD)
+        # TODO need to make the FFD
         self.add_subsystem("geometry", OM_DVGEOCOMP(file="FFD/JBCFFD_32.xyz", type="ffd"))
 
         # add a scenario (flow condition) for optimization, we pass the builder
@@ -107,6 +110,7 @@ class Top(Multipoint):
         self.geometry.nom_setConstraintSurface(tri_points)
 
         # select the FFD points to move
+        # TODO needs to be updated for our case?
         pts = self.geometry.DVGeo.getLocalIndex(0)
         indexList = []
         indexList.extend(pts[8:12, 0, 0:4].flatten())
@@ -124,6 +128,7 @@ class Top(Multipoint):
         self.geometry.nom_addLinearConstraintsShape("reflect", indSetA, indSetB, factorA=1.0, factorB=1.0)
 
         # setup the volume and thickness constraints
+        # TODO don't really need these (perhaps a volume constraint of car)?
         leList = [
             [4.90000000, 0.00000000, -0.41149880],
             [4.90000000, 0.00000000, -0.40347270],
@@ -175,19 +180,17 @@ class Top(Multipoint):
         self.geometry.nom_addVolumeConstraint("volcon", leList, teList, nSpan=25, nChord=50)
 
         # Thickness constraint for lateral thickness
+        # TODO don't need this
         leList = [[5.01, 0.0000, -0.001], [5.01, 0.0000, -0.410]]
         teList = [[6.2, 0.0000, -0.001], [6.2, 0.0000, -0.410]]
         self.geometry.nom_addThicknessConstraints2D("thickcon1", leList, teList, nSpan=8, nChord=5)
 
         # Thickness constraint for propeller shaft
+        # TODO don't need this
         leList = [[6.8, 0.0000, -0.302], [6.8, 0.0000, -0.265]]
         teList = [[6.865, 0.0000, -0.302], [6.865, 0.0000, -0.265]]
         self.geometry.nom_addThicknessConstraints2D("thickcon2", leList, teList, nSpan=5, nChord=5)
 
-        # TODO: this 2D curvature constraint is not in mphys_pygeo yet, need to use 1D curv constraint instead
-        # self.geometry.nom_addCurvatureConstraint(
-        #    "./FFD/hullCurv.xyz", curvatureType="KSmean", lower=0.0, upper=1.21, addToPyOpt=True, scaled=True
-        # )
 
         # add the design variables to the dvs component's output
         self.dvs.add_output("shape", val=np.array([0] * nShapes))

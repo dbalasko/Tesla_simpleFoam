@@ -1,14 +1,12 @@
 # Tesla_simpleFoam
-simpleFoam simulation of a simplified Tesla model S
-# Tesla Model S CFD Simulation
-
-OpenFOAM external aerodynamics case using snappyHexMesh and simpleFoam.
+Drag optimisation of a simplified Tesla model S with the DAFoam package
 
 ## Geometry Files
 
 Due to file size limitations, geometry files are hosted separately:
 
 **Download:** [LRZ Link](https://syncandshare.lrz.de/getlink/fiJyvQSdnxBFL1h5bAwA6j/)
+
 
 ## Quick Start
 ```bash
@@ -17,20 +15,22 @@ git clone https://github.com/dbalasko/Tesla_simpleFoam.git
 cd Tesla_simpleFoam
 
 # 2. Download geometry files from link above
-# Place them in constant/geometry
+# Place them in constant/geometr
 
 # 3. Generate mesh
-./Allclean - WIP
-./runMesh
+./Allclean
+./preProcessing.sh
 
-# 4. Run simulation
-./Allrun - WIP
-#NOTE: Currently 0.orig has a bug at decomposePar, so it has to be renamed to 0, BUT be careful, the current Allclean deletes the 0 folder
-```
+# 4. Start docker for DAFoam
+docker run -it --rm -u dafoamuser --mount "type=bind,src=$(pwd),target=/home/dafoamuser/mount" -w /home/dafoamuser/mount dafoam/opt-packages:v4.0.3 bash
 
-## Case Details - WIP
-- Solver: simpleFoam (steady-state RANS)
+# 5. Run simulation
+mpirun -np 6 python runScript.py 2>&1 | tee logOpt.txt
+
+
+## Case Details
+- Solver: DAsimpleFoam (steady-state RANS)
 - Turbulence: k-omega SST
-- Mesher: cartesianMesh (cfMesh)
-- Domain: 50m × 30m × 20m wind tunnel
+- Mesher: snappyHexMesh
+- Domain: 75m × 6m × 5m wind tunnel (symmetry)
 
