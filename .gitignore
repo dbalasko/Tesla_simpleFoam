@@ -32,7 +32,7 @@ log.*
 *~
 *.backup
 *.bak
-*.orig
+
 
 # Python cache
 __pycache__/

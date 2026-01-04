@@ -15,7 +15,7 @@ git clone https://github.com/dbalasko/Tesla_simpleFoam.git
 cd Tesla_simpleFoam
 
 # 2. Download geometry files from link above
-Place them in constant/geometry
+# Place them in constant/geometry
 
 # 3. Generate mesh
 ./Allclean
