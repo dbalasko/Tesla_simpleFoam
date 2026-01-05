@@ -31,7 +31,7 @@ log.*
 # Backup files
 *~
 *.backup
-*.bak
+# *.bak
 
 
 # Python cache
