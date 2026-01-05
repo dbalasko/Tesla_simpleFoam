@@ -94,6 +94,6 @@ for block in range(nBlocks):
     points.append(returnBlockPoints(corners[block],nx[block],ny[block],nz[block]))
 
 #print points
-fileName = 'teslaFFD.xyz'
+fileName = 'FFD/teslaFFD.xyz'
 writeFFDFile(fileName,nBlocks,nx,ny,nz,points)
 

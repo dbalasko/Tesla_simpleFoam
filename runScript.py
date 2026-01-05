@@ -21,7 +21,7 @@ args = parser.parse_args()
 # Input Parameters
 # =============================================================================
 
-U0 = 40		#! Inlet velocity
+U0 = 40.0	#! Inlet velocity
 A0 = 1.55 	##! TODO Find actual frontal area, but approximately around 2.1 m^2 from internet
 		## NOTE: WE NEED ONLY HALF THE AREA; SINCE WE SIMULATE HALF CAR
 
