@@ -15,7 +15,10 @@ surfaceFeatureExtract #>> log.meshGeneration
 
 # Import tesla geometry & mesh in parallel
 decomposePar #>> log.meshGeneration
-foamJob -parallel -screen snappyHexMesh #>> log.meshGeneration
+# foamJob -parallel -screen snappyHexMesh #>> log.meshGeneration
+nProcs=$(grep "numberOfSubdomains" system/decomposeParDict | awk '{print $2}' | sed 's/;//')
+echo "Number of processors: $nProcs"
+mpirun -np $nProcs snappyHexMesh -parallel | tee log.meshGeneration
 reconstructParMesh -latestTime #>> log.meshGeneration
 echo "Reconstructed parallel mesh"
 

@@ -73,7 +73,7 @@ castellatedMeshControls
     maxLocalCells 2000000;
     maxGlobalCells 5000000;
     minRefinementCells 10;
-    nCellsBetweenLevels 2;
+    nCellsBetweenLevels 5;
     
     features
     (
@@ -83,22 +83,22 @@ castellatedMeshControls
     {
         body
         {
-            level (4 4);
+            level (5 6);
         }
         
 	optSurface
         {
-            level (4 4);
+            level (5 6);
         }
         
 	wheelFL
         {
-            level (4 4);
+            level (5 6);
         }
         
 	wheelRL
         {
-            level (4 4);
+            level (5 6);
         }
     }
 
@@ -131,10 +131,10 @@ castellatedMeshControls
 snapControls
 {
 
-    nSmoothPatch 3;
-    tolerance 0.1;
-    nSolveIter 10;
-    nRelaxIter 3;
+    nSmoothPatch 10;
+    tolerance 1.0;
+    nSolveIter 50;
+    nRelaxIter 10;
 }
 
 addLayersControls
@@ -144,22 +144,22 @@ addLayersControls
     {
         body
         {
-            nSurfaceLayers 5;
+            nSurfaceLayers 0;
         }
         
         optSurface
         {
-            nSurfaceLayers 5;
+            nSurfaceLayers 0;
         }
         
         wheelFL
         {
-            nSurfaceLayers 5;
+            nSurfaceLayers 0;
         }
         
         wheelRL
         {
-            nSurfaceLayers 5;
+            nSurfaceLayers 0;
         }
     }
 
