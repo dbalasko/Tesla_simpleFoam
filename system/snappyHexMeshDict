@@ -123,9 +123,9 @@ castellatedMeshControls
        }
     }
 
-    locationInMesh	(1e-5 1e-5 1e-5)
+    locationInMesh	(1e-5 1e-5 1e-5);
     
-    allowFreeStandingZoneFaces
+    allowFreeStandingZoneFaces true;
 }
 
 snapControls

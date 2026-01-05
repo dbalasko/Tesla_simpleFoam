@@ -15,12 +15,11 @@ git clone https://github.com/dbalasko/Tesla_simpleFoam.git
 cd Tesla_simpleFoam
 
 # 2. Download geometry files from link above
-# Place them in constant/geometry
+# Place them in constant/triSurface
 
 # 3. Generate mesh
 ./Allclean
 ./preProcessing.sh
-
 
 # 4. Start docker for DAFoam
 docker run -it --rm -u dafoamuser --mount "type=bind,src=$(pwd),target=/home/dafoamuser/mount" -w /home/dafoamuser/mount dafoam/opt-packages:v4.0.3 bash
@@ -30,7 +29,7 @@ python3 FFD/genFFD.py
 # Can use convert_ffd_to_vtk.py to generate a file which can be viewed in paraview (sanity check)
 
 # 6. Run simulation
-mpirun -np 6 python runScript.py 2>&1 | tee logOpt.txt
+mpirun -np 4 python runScript.py 2>&1 | tee logOpt.txt
 
 
 ## Case Details

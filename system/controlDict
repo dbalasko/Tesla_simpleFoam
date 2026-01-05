@@ -50,7 +50,7 @@ runTimeModifiable true;
 
 functions
 {
-	#includeFunc	residuals;
+	/*#includeFunc	residuals;
 	
     	wallShearStress
     	{
@@ -60,7 +60,7 @@ functions
        	    writeInterval       50;
     	}
     	
-    	/*forceCoeffs
+    	forceCoeffs
 	{
 	    type        forceCoeffs;
 	    libs        ("libforces.so");

@@ -40,11 +40,17 @@ edges
 (
 );
 
+defaultPatch
+{
+    name background;
+    type internal;
+}
+
 boundary
 (
-    inlet
+inlet
     {
-        type patch;
+        type inlet;
         faces
         (
             (0 3 7 4)
@@ -53,14 +59,14 @@ boundary
 
     outlet
     {
-        type patch;
+        type outlet;
         faces
         (
             (1 5 6 2)
         );
     }
 
-    ground
+    wall
     {
         type wall;
         faces
@@ -71,29 +77,13 @@ boundary
     
     symmetry
     {
-        type symmetryPlane;
-        faces
-        (    
-            (0 1 2 3)
-        );
-    }
-
-    top
-    {
-        type wall;
-        faces
-        (
-            (4 7 6 5)
-        );
-    }
-
-    side
-    {
-        type wall;
-        faces
-        (
-            (3 2 6 7)
-        );
+	type symmetry;
+	faces
+	(	
+		(4 7 6 5)
+        	(3 2 6 7)
+		(0 1 2 3)
+	);
     }
 );
 

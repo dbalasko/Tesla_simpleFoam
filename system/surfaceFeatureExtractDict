@@ -71,7 +71,7 @@ wheelFL.stl
     writeObj                yes;
 }
 
-wheelFR.stl
+wheelRL.stl
 {
     extractionMethod    extractFromSurface;
 
@@ -90,7 +90,9 @@ wheelFR.stl
     writeObj                yes;
 }
 
-/*wheelRL.stl
+
+
+/*wheelFR.stl
 {
     extractionMethod    extractFromSurface;
 

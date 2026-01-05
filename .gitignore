@@ -1,5 +1,5 @@
-# Time directories (including 0)
-[0-9]*
+# Time directories
+[1-9]*
 [0-9][0-9]*
 [0-9].[0-9]*
 
@@ -9,6 +9,8 @@ processor*
 # Mesh (will be regenerated)
 constant/polyMesh/
 constant/geometry/
+constant/triSurface
+constant/extendedFeatureEdgeMesh
 
 # Intermediate/temporary STL files
 constant/triSurface/windtunnel.stl
