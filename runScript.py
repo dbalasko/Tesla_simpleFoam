@@ -22,9 +22,15 @@ args = parser.parse_args()
 # =============================================================================
 
 U0 = 40		#! Inlet velocity
-A0 = 2.1 	##! TODO Find actual frontal area, but approximately around 2.1 m^2 from internet
+A0 = 1.55 	##! TODO Find actual frontal area, but approximately around 2.1 m^2 from internet
+		## NOTE: WE NEED ONLY HALF THE AREA; SINCE WE SIMULATE HALF CAR
+
 p0 = 0.0	#! Since incompressible
-nuTilda0 = 3.0e-5	##! TODO Unsure what turbulence intensity should be (originally 1e-5 but this was a marine application)
+nuTilda0 = 5.0e-5	##! Approx value in low turb. intensity windtunnel
+
+## nuTilda (Turbulent viscosity) should be 3-5 * nu_air approx.
+## μ_t/μ ≈ (3/2) × (I × Re_L)^(3/2) / √(C_μ)
+
 
 # Set the parameters for optimization
 daOptions = {
@@ -110,86 +116,96 @@ class Top(Multipoint):
         self.geometry.nom_setConstraintSurface(tri_points)
 
         # select the FFD points to move
-        ##! TODO needs to be updated for our case?
+        ##! 
+
         pts = self.geometry.DVGeo.getLocalIndex(0)
         indexList = []
-        indexList.extend(pts[8:12, 0, 0:4].flatten())
-        indexList.extend(pts[8:12, -1, 0:4].flatten())
+
+	## CODE changed
+	## Select rear section FFD points
+	## Assuming your FFD has dimensions [nx, ny, nz]
+	## Select rear portion: last 4 streamwise points, middle height points
+
+        indexList.extend(pts[-4:, 1:-1, :].flatten())
         PS = geo_utils.PointSelect("list", indexList)
         nShapes = self.geometry.nom_addLocalDV(dvName="shape", axis="y", pointSelect=PS)
 
-        # Create reflection constraint
-        indSetA = []
-        indSetB = []
-        for i in range(8, 12, 1):
-            for k in range(0, 4, 1):
-                indSetA.append(pts[i, 0, k])
-                indSetB.append(pts[i, -1, k])
-        self.geometry.nom_addLinearConstraintsShape("reflect", indSetA, indSetB, factorA=1.0, factorB=1.0)
+        ##? No need for reflection constraint, since we simulate just half of the car
+
+        ## indSetA = []
+        ## indSetB = []
+        ## for i in range(pts.shape[0]-4, pts.shape[0], 1):
+        ##    for k in range(1, pts.shape[1]-1, 1):
+        ##        indSetA.append(pts[i, j, 0])
+        ##        indSetB.append(pts[i, j, -1])
+        ## self.geometry.nom_addLinearConstraintsShape("reflect", indSetA, indSetB, factorA=1.0, factorB=1.0)
 
         # setup the volume and thickness constraints
-        ##! TODO don't really need these (perhaps a volume constraint of car)?
-        leList = [
-            [4.90000000, 0.00000000, -0.41149880],
-            [4.90000000, 0.00000000, -0.40347270],
-            [4.90000000, 0.00000000, -0.38803330],
-            [4.90000000, 0.00000000, -0.36534750],
-            [4.90000000, 0.00000000, -0.33601030],
-            [4.90000000, 0.00000000, -0.31016020],
-            [4.90000000, 0.00000000, -0.28327050],
-            [4.90000000, 0.00000000, -0.26248810],
-            [4.90000000, 0.00000000, -0.24076410],
-            [4.90000000, 0.00000000, -0.20933480],
-            [4.90000000, 0.00000000, -0.17458840],
-            [4.90000000, 0.00000000, -0.14233480],
-            [4.90000000, 0.00000000, -0.11692880],
-            [4.90000000, 0.00000000, -0.09984235],
-            [4.90000000, 0.00000000, -0.08874606],
-            [4.90000000, 0.00000000, -0.07969946],
-            [4.90000000, 0.00000000, -0.06954966],
-            [4.90000000, 0.00000000, -0.05864429],
-            [4.90000000, 0.00000000, -0.04829308],
-            [4.90000000, 0.00000000, -0.03831457],
-            [4.90000000, 0.00000000, -0.02430242],
-            [4.90000000, 0.00000000, -0.00100000],
-        ]
-        teList = [
-            [6.70332700, 0.00000000, -0.41149880],
-            [6.73692400, 0.00000000, -0.40347270],
-            [6.76842800, 0.00000000, -0.38803330],
-            [6.79426000, 0.00000000, -0.36534750],
-            [6.81342600, 0.00000000, -0.33601030],
-            [6.83648300, 0.00000000, -0.31016020],
-            [6.85897100, 0.00000000, -0.28327050],
-            [6.83593600, 0.00000000, -0.26248810],
-            [6.80929800, 0.00000000, -0.24076410],
-            [6.79395800, 0.00000000, -0.20933480],
-            [6.79438900, 0.00000000, -0.17458840],
-            [6.80874100, 0.00000000, -0.14233480],
-            [6.83265000, 0.00000000, -0.11692880],
-            [6.86250800, 0.00000000, -0.09984235],
-            [6.89566400, 0.00000000, -0.08874606],
-            [6.92987100, 0.00000000, -0.07969946],
-            [6.96333200, 0.00000000, -0.06954966],
-            [6.99621200, 0.00000000, -0.05864429],
-            [7.02921500, 0.00000000, -0.04829308],
-            [7.06253200, 0.00000000, -0.03831457],
-            [7.09456600, 0.00000000, -0.02430242],
-            [7.12000000, 0.00000000, -0.00100000],
-        ]
-        self.geometry.nom_addVolumeConstraint("volcon", leList, teList, nSpan=25, nChord=50)
+        ##? For TESTING PURPOSE NO CONSTRAINT IS USED (WE MIGHT USE CONSTRAINT FOR VOLUME)
+
+        ##leList = [
+        ##    [4.90000000, 0.00000000, -0.41149880],
+        ##    [4.90000000, 0.00000000, -0.40347270],
+        ##    [4.90000000, 0.00000000, -0.38803330],
+        ##    [4.90000000, 0.00000000, -0.36534750],
+        ##    [4.90000000, 0.00000000, -0.33601030],
+        ##    [4.90000000, 0.00000000, -0.31016020],
+        ##    [4.90000000, 0.00000000, -0.28327050],
+        ##    [4.90000000, 0.00000000, -0.26248810],
+        ##    [4.90000000, 0.00000000, -0.24076410],
+        ##    [4.90000000, 0.00000000, -0.20933480],
+        ##    [4.90000000, 0.00000000, -0.17458840],
+        ##    [4.90000000, 0.00000000, -0.14233480],
+        ##    [4.90000000, 0.00000000, -0.11692880],
+        ##    [4.90000000, 0.00000000, -0.09984235],
+        ##    [4.90000000, 0.00000000, -0.08874606],
+        ##    [4.90000000, 0.00000000, -0.07969946],
+        ##    [4.90000000, 0.00000000, -0.06954966],
+        ##    [4.90000000, 0.00000000, -0.05864429],
+        ##    [4.90000000, 0.00000000, -0.04829308],
+        ##    [4.90000000, 0.00000000, -0.03831457],
+        ##    [4.90000000, 0.00000000, -0.02430242],
+        ##    [4.90000000, 0.00000000, -0.00100000],
+        ##]
+        ##teList = [
+        ##    [6.70332700, 0.00000000, -0.41149880],
+        ##    [6.73692400, 0.00000000, -0.40347270],
+        ##    [6.76842800, 0.00000000, -0.38803330],
+        ##    [6.79426000, 0.00000000, -0.36534750],
+        ##    [6.81342600, 0.00000000, -0.33601030],
+        ##    [6.83648300, 0.00000000, -0.31016020],
+        ##    [6.85897100, 0.00000000, -0.28327050],
+        ##    [6.83593600, 0.00000000, -0.26248810],
+        ##    [6.80929800, 0.00000000, -0.24076410],
+        ##    [6.79395800, 0.00000000, -0.20933480],
+        ##    [6.79438900, 0.00000000, -0.17458840],
+        ##    [6.80874100, 0.00000000, -0.14233480],
+        ##    [6.83265000, 0.00000000, -0.11692880],
+        ##    [6.86250800, 0.00000000, -0.09984235],
+        ##    [6.89566400, 0.00000000, -0.08874606],
+        ##    [6.92987100, 0.00000000, -0.07969946],
+        ##    [6.96333200, 0.00000000, -0.06954966],
+        ##    [6.99621200, 0.00000000, -0.05864429],
+        ##    [7.02921500, 0.00000000, -0.04829308],
+        ##    [7.06253200, 0.00000000, -0.03831457],
+        ##    [7.09456600, 0.00000000, -0.02430242],
+        ##    [7.12000000, 0.00000000, -0.00100000],
+        ##]
+        ## self.geometry.nom_addVolumeConstraint("volcon", leList, teList, nSpan=25, nChord=50)
 
         # Thickness constraint for lateral thickness
-        ##! TODO don't need this
-        leList = [[5.01, 0.0000, -0.001], [5.01, 0.0000, -0.410]]
-        teList = [[6.2, 0.0000, -0.001], [6.2, 0.0000, -0.410]]
-        self.geometry.nom_addThicknessConstraints2D("thickcon1", leList, teList, nSpan=8, nChord=5)
+        ##? For TESTING PURPOSE NO CONSTRAINT
+
+        ## leList = [[5.01, 0.0000, -0.001], [5.01, 0.0000, -0.410]]
+        ## teList = [[6.2, 0.0000, -0.001], [6.2, 0.0000, -0.410]]
+        ## self.geometry.nom_addThicknessConstraints2D("thickcon1", leList, teList, nSpan=8, nChord=5)
 
         # Thickness constraint for propeller shaft
-        ##! TODO don't need this
-        leList = [[6.8, 0.0000, -0.302], [6.8, 0.0000, -0.265]]
-        teList = [[6.865, 0.0000, -0.302], [6.865, 0.0000, -0.265]]
-        self.geometry.nom_addThicknessConstraints2D("thickcon2", leList, teList, nSpan=5, nChord=5)
+        ##? For TESTING PURPOSE NO CONSTRAINT
+
+        ## leList = [[6.8, 0.0000, -0.302], [6.8, 0.0000, -0.265]]
+        ## teList = [[6.865, 0.0000, -0.302], [6.865, 0.0000, -0.265]]
+        ## self.geometry.nom_addThicknessConstraints2D("thickcon2", leList, teList, nSpan=5, nChord=5)
 
 
         # add the design variables to the dvs component's output
@@ -202,10 +218,16 @@ class Top(Multipoint):
 
         # add objective and constraints to the top level
         self.add_objective("scenario1.aero_post.CD", scaler=1.0)
-        self.add_constraint("geometry.thickcon1", lower=1e-3, upper=1.125, scaler=1.0)
-        self.add_constraint("geometry.thickcon2", lower=1.0, upper=10.0, scaler=1.0)
-        self.add_constraint("geometry.volcon", lower=1.0, scaler=1.0)
-        self.add_constraint("geometry.reflect", equals=0.0, scaler=1.0, linear=True)
+
+	##? NO CONSTRAINTS
+
+        ## self.add_constraint("geometry.thickcon1", lower=1e-3, upper=1.125, scaler=1.0)
+        ## self.add_constraint("geometry.thickcon2", lower=1.0, upper=10.0, scaler=1.0)
+        ## self.add_constraint("geometry.volcon", lower=1.0, scaler=1.0)
+
+	##? No need, since only half car is simulated
+
+        ## self.add_constraint("geometry.reflect", equals=0.0, scaler=1.0, linear=True)
 
 
 #! Don't need to change anything below I believe
