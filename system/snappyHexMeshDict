@@ -77,10 +77,10 @@ geometry
 
 castellatedMeshControls
 {
-    maxLocalCells 1000000;
-    maxGlobalCells 1800000;
-    minRefinementCells 10;
-    nCellsBetweenLevels 5;
+    maxLocalCells 100000;
+    maxGlobalCells 400000;
+    minRefinementCells 0;
+    nCellsBetweenLevels 3;
     
     features
     (
@@ -90,28 +90,28 @@ castellatedMeshControls
     {
         body
         {
-            level (4 6);
+            level (4 5);
         }
         
 	optSurface
         {
-            level (4 5);
+            level (4 4);
         }
         
 	wheelFL
         {
-            level (4 5);
+            level (4 4);
         }
         
 	wheelRL
         {
-            level (4 5);
+            level (4 4);
         }
     }
 
     refinementRegions
     {
-       box1
+       /*box1
        {
              mode inside;
              levels ((1 1));
@@ -133,10 +133,10 @@ castellatedMeshControls
        {
        	   mode inside;
 	   levels ((4 4)); 
-       }
+       }*/
     }
 
-    locationInMesh	(1e-5 1e-5 1e-5);
+    locationInMesh	(15 1e-5 1e-5);
     
     allowFreeStandingZoneFaces true;
 }
@@ -144,18 +144,18 @@ castellatedMeshControls
 snapControls
 {
 
-    nSmoothPatch 5;
+    nSmoothPatch 3;
     tolerance 0.5;
     nSolveIter 100;
     nRelaxIter 10;
     nFeatureSnapIter 15;     // More feature snapping
-    implicitFeatureSnap true;  // Better edge detection
+    implicitFeatureSnap false;  // Better edge detection
     explicitFeatureSnap true;
     multiRegionFeatureSnap false;
 
     // Quality controls during snapping
-    nSmoothDisplacement 5;    // Smooth point movement
-    nSmoothNormals 3;         // Smooth surface normals
+    //nSmoothDisplacement 5;    // Smooth point movement
+    //nSmoothNormals 3;         // Smooth surface normals
 }
 
 addLayersControls
@@ -192,11 +192,11 @@ addLayersControls
     // Advanced settings
     featureAngle 60;
     nRelaxIter 10;
-    nSmoothSurfaceNormals 20;
+    nSmoothSurfaceNormals 10;
     nSmoothNormals 10;
     nSmoothThickness 10;
     maxFaceThicknessRatio 1;
-    maxThicknessToMedialRatio 1;
+    maxThicknessToMedialRatio 0.3;
     minMedianAxisAngle 130;
     nBufferCellsNoExtrude 0;
     nLayerIter 50;

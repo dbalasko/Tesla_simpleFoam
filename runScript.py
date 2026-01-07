@@ -21,7 +21,7 @@ args = parser.parse_args()
 # Input Parameters
 # =============================================================================
 
-U0 = 40.0	#! Inlet velocity
+U0 = 20.0	#! Inlet velocity
 A0 = 1.55 	##! TODO Find actual frontal area, but approximately around 2.1 m^2 from internet
 		## NOTE: WE NEED ONLY HALF THE AREA; SINCE WE SIMULATE HALF CAR
 
@@ -55,7 +55,15 @@ daOptions = {
         },
     },
     "normalizeStates": {"U": 1.0, "p": 1.0, "nuTilda": 1e-4, "phi": 1.0},
-    "adjEqnOption": {"gmresRelTol": 1.0e-6, "pcFillLevel": 1, "jacMatReOrdering": "rcm"},
+    "adjEqnOption": {
+        "gmresRelTol": 1.0e-4,
+        "gmresAbsTol": 1.0e-15,
+        "gmresRestart": 30,
+        "gmresMaxIters": 1000,
+        "pcFillLevel": 1,
+        "jacMatReOrdering": "rcm",
+        "printInterval": 10,
+    },
     "adjPCLag": 1,
     # Design variable setup
     "inputInfo": {
@@ -124,9 +132,9 @@ class Top(Multipoint):
 	## CODE changed
 	## Select rear section FFD points
 	## Assuming your FFD has dimensions [nx, ny, nz]
-	## Select rear portion: last 4 streamwise points, middle height points
+	## Select rear portion: last 3 streamwise points, middle height points
 
-        indexList.extend(pts[-4:, 1:-1, :].flatten())
+        indexList.extend(pts[-3:, 1:-1, :-1].flatten())
         PS = geo_utils.PointSelect("list", indexList)
         nShapes = self.geometry.nom_addLocalDV(dvName="shape", axis="y", pointSelect=PS)
 

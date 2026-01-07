@@ -14,11 +14,11 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Uinlet          (40 0 0);
+Uinlet          (20 0 0);
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform (40 0 0);
+internalField   uniform (20 0 0);
 
 boundaryField
 {
@@ -35,8 +35,7 @@ boundaryField
 
     wall
     {
-        type            movingWallVelocity;
-	value		$internalField;
+        type            symmetry;
     }
     
     body
@@ -54,7 +53,7 @@ boundaryField
 	type		rotatingWallVelocity;
 	origin		(25.936 0.287 0.972);
 	axis		(0 0 1);
-	omega 		119.4;
+	omega 		59.7;
     } 
     
     wheelRL
@@ -62,7 +61,7 @@ boundaryField
 	type		rotatingWallVelocity;
 	origin		(28.901 0.287 0.972);
 	axis		(0 0 1);
-	omega 		119.4;
+	omega 		59.7;
     } 
        
     symmetry

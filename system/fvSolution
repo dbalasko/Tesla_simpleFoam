@@ -20,8 +20,8 @@ solvers
     {
         solver          GAMG;
         smoother        GaussSeidel;
-        tolerance       1e-7;              // Tighter tolerance
-        relTol          0.01;              // CRITICAL: Changed from 0.1!
+        tolerance       1e-8;              // Tighter tolerance
+        relTol          0.001;              // CRITICAL: Changed from 0.1!
         
         // Add these GAMG parameters
         nPreSweeps      0;
@@ -30,7 +30,7 @@ solvers
         nFinestSweeps   2;
         cacheAgglomeration true;
         agglomerator    faceAreaPair;
-        nCellsInCoarsestLevel 10;
+        nCellsInCoarsestLevel 20;
         mergeLevels     1;
         maxIter         100;               // Add iteration limit
     }
@@ -71,7 +71,7 @@ SIMPLE
     
     residualControl
     {
-        p               1e-5;            // Tighter than 1e-4
+        p               1e-6;            // Tighter than 1e-4
         U               1e-6;            // Tighter
         "(k|omega|epsilon)" 1e-6;       // Tighter
     }
@@ -98,12 +98,12 @@ relaxationFactors
 {
     fields
     {
-        p               0.3;             // Good, keep this
+        p               0.2;             // Good, keep this
     }
     equations
     {
-        U               0.7;             // Good
-        "(k|omega|epsilon)" 0.7;        // Good
+        U               0.6;             // Good
+        "(k|omega|epsilon)" 0.6;        // Good
     }
 }
 

@@ -34,8 +34,7 @@ boundaryField
 
     wall
     {
-        type            nutkWallFunction;
-        value           uniform 0;
+        type            symmetry;
     }
     
     body

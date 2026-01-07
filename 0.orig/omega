@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-omegaInlet      267.0;
+omegaInlet      133.5;
 
 dimensions      [0 0 -1 0 0 0 0];
 
@@ -35,8 +35,7 @@ boundaryField
 
     wall
     {
-        type            omegaWallFunction;
-        value           uniform $omegaInlet;
+        type            symmetry;
     }
     
     body
