@@ -165,22 +165,22 @@ addLayersControls
     {
         body
         {
-            nSurfaceLayers 0;
+            nSurfaceLayers 3;
         }
-        
+
         optSurface
         {
-            nSurfaceLayers 0;
+            nSurfaceLayers 3;
         }
-        
+
         wheelFL
         {
-            nSurfaceLayers 0;
+            nSurfaceLayers 3;
         }
-        
+
         wheelRL
         {
-            nSurfaceLayers 0;
+            nSurfaceLayers 3;
         }
     }
 

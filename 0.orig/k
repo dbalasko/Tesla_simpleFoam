@@ -35,7 +35,7 @@ boundaryField
 
     wall
     {
-        type            symmetry;
+        type            slip;
     }
     
     body

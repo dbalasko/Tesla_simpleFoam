@@ -35,7 +35,7 @@ boundaryField
 
     wall
     {
-        type            symmetry;
+        type            slip;
     }
     
     body
@@ -50,18 +50,12 @@ boundaryField
     
     wheelFL
     {
-	type		rotatingWallVelocity;
-	origin		(25.936 0.287 0.972);
-	axis		(0 0 1);
-	omega 		59.7;
+	type		noSlip;
     } 
     
     wheelRL
     {
-	type		rotatingWallVelocity;
-	origin		(28.901 0.287 0.972);
-	axis		(0 0 1);
-	omega 		59.7;
+	type		noSlip;
     } 
        
     symmetry
