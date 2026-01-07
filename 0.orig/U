@@ -18,7 +18,7 @@ Uinlet          (40 0 0);
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform (0 0 0);
+internalField   uniform (40 0 0);
 
 boundaryField
 {
@@ -30,13 +30,13 @@ boundaryField
 
     outlet
     {
-        type            pressureInletOutletVelocity;
-        value           uniform (0 0 0);
+        type            zeroGradient;
     }
 
     wall
     {
-        type            noSlip;
+        type            movingWallVelocity;
+	value		$internalField;
     }
     
     body

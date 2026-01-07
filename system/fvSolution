@@ -7,7 +7,7 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version	2.0;
+    version     2.0;
     format      ascii;
     class       dictionary;
     object      fvSolution;
@@ -20,34 +20,64 @@ solvers
     {
         solver          GAMG;
         smoother        GaussSeidel;
-        tolerance       1e-6;
-        relTol          0.1;
+        tolerance       1e-7;              // Tighter tolerance
+        relTol          0.01;              // CRITICAL: Changed from 0.1!
+        
+        // Add these GAMG parameters
+        nPreSweeps      0;
+        nPostSweeps     2;
+        nSweeps         2;
+        nFinestSweeps   2;
+        cacheAgglomeration true;
+        agglomerator    faceAreaPair;
+        nCellsInCoarsestLevel 10;
+        mergeLevels     1;
+        maxIter         100;               // Add iteration limit
     }
-
+    
     pFinal
     {
         $p;
         relTol         0;
+        tolerance      1e-7;
     }
-
+    
     Phi
     {
         $p;
     }
-
+    
     "(U|k|omega|epsilon)"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        tolerance       1e-6;
-        relTol          0.1;
+        tolerance       1e-8;              // Tighter
+        relTol          0.1;               // This is OK for U,k,omega
+        maxIter         20;                // Add limit
     }
-
+    
     "(U|k|omega|epsilon)Final"
     {
         $U;
         relTol          0;
+        tolerance       1e-8;
     }
+}
+
+SIMPLE
+{
+    nNonOrthogonalCorrectors 2;        // Changed from 0!
+    consistent      yes;                // Add SIMPLEC
+    
+    residualControl
+    {
+        p               1e-5;            // Tighter than 1e-4
+        U               1e-6;            // Tighter
+        "(k|omega|epsilon)" 1e-6;       // Tighter
+    }
+    
+    pRefCell        0;
+    pRefValue       0;
 }
 
 "(PIMPLE|PISO)"
@@ -59,20 +89,6 @@ solvers
     pRefValue       0;
 }
 
-SIMPLE
-{
-    residualControl
-    {
-        p               1e-4;
-        U               1e-4;
-        "(k|omega|epsilon)" 1e-4;
-    }
-    nNonOrthogonalCorrectors 0;
-    pRefCell        0;
-    pRefValue       0;
-
-}
-
 potentialFlow
 {
     nNonOrthogonalCorrectors 10;
@@ -82,12 +98,12 @@ relaxationFactors
 {
     fields
     {
-        p               0.3;
+        p               0.3;             // Good, keep this
     }
     equations
     {
-        U               0.7;
-        "(k|omega|epsilon)" 0.7;
+        U               0.7;             // Good
+        "(k|omega|epsilon)" 0.7;        // Good
     }
 }
 

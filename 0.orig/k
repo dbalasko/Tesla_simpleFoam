@@ -30,9 +30,7 @@ boundaryField
 
     outlet
     {
-        type            inletOutlet;
-        inletValue      uniform $kInlet;
-        value           uniform $kInlet;
+        type            zeroGradient;
     }
 
     wall

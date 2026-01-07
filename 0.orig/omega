@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-omegaInlet      16000.0;
+omegaInlet      267.0;
 
 dimensions      [0 0 -1 0 0 0 0];
 
@@ -30,9 +30,7 @@ boundaryField
 
     outlet
     {
-        type            inletOutlet;
-        inletValue      uniform $omegaInlet;
-        value           uniform $omegaInlet;
+        type            zeroGradient;
     }
 
     wall

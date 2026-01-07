@@ -28,7 +28,7 @@ deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   50;
+writeInterval   100;
 
 purgeWrite      0;
 
@@ -50,14 +50,26 @@ runTimeModifiable true;
 
 functions
 {
-	/*#includeFunc	residuals;
+	#includeFunc	residuals;
 	
+    	yPlus
+    	{
+        type            yPlus;
+        libs            ("libfieldFunctionObjects.so");
+        
+        writeControl    writeTime;  // Calculate when writing
+        // OR
+        // writeControl    timeStep;
+        // writeInterval   100;      // Calculate every 100 iterations
+    	}
+    
     	wallShearStress
     	{
-       	    type                wallShearStress;
-       	    functionObjectLibs  ("libfieldFunctionObjects.so");
-            writeControl        timeStep;
-       	    writeInterval       50;
+        type            wallShearStress;
+        libs            ("libfieldFunctionObjects.so");
+        patches         ("body.*" "wheel_.*");  // Your wall patches
+        
+        writeControl    writeTime;
     	}
     	
     	forceCoeffs
@@ -76,10 +88,10 @@ functions
 	    
 	    magUInf	40;
 	    lRef	1;
-	    Aref	0.09556;
+	    Aref	1.15;
 	    rho		rhoInf;
 	    rhoInf	1;
-	}*/
+	}
 	
 }
 

@@ -66,12 +66,19 @@ geometry
         min (24 0 0);
         max (36 2.5 2);
    }
+
+    box4
+    {
+    	type searchableBox;
+	min (28 0 0);
+	max (34 1.6 1.5);
+    }
 };
 
 castellatedMeshControls
 {
-    maxLocalCells 2000000;
-    maxGlobalCells 5000000;
+    maxLocalCells 1000000;
+    maxGlobalCells 1800000;
     minRefinementCells 10;
     nCellsBetweenLevels 5;
     
@@ -83,22 +90,22 @@ castellatedMeshControls
     {
         body
         {
-            level (5 6);
+            level (4 6);
         }
         
 	optSurface
         {
-            level (5 6);
+            level (4 5);
         }
         
 	wheelFL
         {
-            level (5 6);
+            level (4 5);
         }
         
 	wheelRL
         {
-            level (5 6);
+            level (4 5);
         }
     }
 
@@ -121,6 +128,12 @@ castellatedMeshControls
              mode inside;
              levels ((3 3));
        }
+
+       box4
+       {
+       	   mode inside;
+	   levels ((4 4)); 
+       }
     }
 
     locationInMesh	(1e-5 1e-5 1e-5);
@@ -131,10 +144,18 @@ castellatedMeshControls
 snapControls
 {
 
-    nSmoothPatch 10;
-    tolerance 1.0;
-    nSolveIter 50;
+    nSmoothPatch 5;
+    tolerance 0.5;
+    nSolveIter 100;
     nRelaxIter 10;
+    nFeatureSnapIter 15;     // More feature snapping
+    implicitFeatureSnap true;  // Better edge detection
+    explicitFeatureSnap true;
+    multiRegionFeatureSnap false;
+
+    // Quality controls during snapping
+    nSmoothDisplacement 5;    // Smooth point movement
+    nSmoothNormals 3;         // Smooth surface normals
 }
 
 addLayersControls
@@ -183,17 +204,17 @@ addLayersControls
 
 meshQualityControls
 {
-    maxNonOrtho 60;
+    maxNonOrtho 65;
     maxBoundarySkewness 20;
     maxInternalSkewness 4;
     maxConcave 80;
     minFlatness 0.5;
     minVol 1e-13;
-    minTetQuality 1e-30;
+    minTetQuality 1e-15;
     minArea -1;
-    minTwist 0.05;
+    minTwist 0.02;
     minDeterminant 0.001;
-    minFaceWeight 0.05;
+    minFaceWeight 0.02;
     minVolRatio 0.01;
     minTriangleTwist -1;
 
