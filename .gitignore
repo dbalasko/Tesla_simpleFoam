@@ -21,7 +21,6 @@ postProcessing/
 VTK/
 *.vtk
 *.vtu
-*.foam
 *.vts
 
 # Log files
