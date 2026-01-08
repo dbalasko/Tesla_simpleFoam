@@ -15,19 +15,28 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-numberOfSubdomains     32;
+numberOfSubdomains     8;
 
-method                 scotch;
+method                 hierarchical;
 
 kahipCoeffs 
 { 
     config                  fast;
     imbalance              0.01;
 } 
+
 simpleCoeffs 
 { 
-    n                  (2 2 1);
+    n                  (2 2 2);
     delta              0.001;
+} 
+
+
+hierarchicalCoeffs 
+{ 
+    n                  (2 2 2);
+    delta              0.001;
+    order	       xyz;
 } 
 
 distributed            false;

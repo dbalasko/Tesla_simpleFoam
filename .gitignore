@@ -9,7 +9,7 @@ processor*
 # Mesh (will be regenerated)
 constant/polyMesh/
 constant/geometry/
-constant/triSurface
+#constant/triSurface
 constant/extendedFeatureEdgeMesh
 
 # Intermediate/temporary STL files

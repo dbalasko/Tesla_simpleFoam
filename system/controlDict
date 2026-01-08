@@ -50,7 +50,7 @@ runTimeModifiable true;
 
 functions
 {
-	#includeFunc	residuals;
+	/*#includeFunc	residuals;
 	
     	yPlus
     	{
@@ -91,7 +91,7 @@ functions
 	    Aref	1.15;
 	    rho		rhoInf;
 	    rhoInf	1;
-	}
+	}*/
 	
 }
 

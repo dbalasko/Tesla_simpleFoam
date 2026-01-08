@@ -90,22 +90,22 @@ castellatedMeshControls
     {
         body
         {
-            level (4 5);
+            level (3 3);
         }
         
 	optSurface
         {
-            level (4 4);
+            level (3 3);
         }
         
 	wheelFL
         {
-            level (4 4);
+            level (3 3);
         }
         
 	wheelRL
         {
-            level (4 4);
+            level (3 3);
         }
     }
 
@@ -136,7 +136,7 @@ castellatedMeshControls
        }*/
     }
 
-    locationInMesh	(15 1e-5 1e-5);
+    locationInMesh	(17.5 1e-5 1e-5);
     
     allowFreeStandingZoneFaces true;
 }
