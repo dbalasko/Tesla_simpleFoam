@@ -68,7 +68,7 @@ inlet
 
     wall
     {
-        type symmetry;
+        type wall;
         faces
         (
             (0 4 5 1)
