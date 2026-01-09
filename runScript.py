@@ -26,7 +26,7 @@ A0 = 1.55 	##! TODO Find actual frontal area, but approximately around 2.1 m^2 f
 		## NOTE: WE NEED ONLY HALF THE AREA; SINCE WE SIMULATE HALF CAR
 
 p0 = 0.0	#! Since incompressible
-nuTilda0 = 5.0e-5	##! Approx value in low turb. intensity windtunnel
+nuTilda0 = 1.0e-4	##! Approx value in low turb. intensity windtunnel
 
 ## nuTilda (Turbulent viscosity) should be 3-5 * nu_air approx.
 ## μ_t/μ ≈ (3/2) × (I × Re_L)^(3/2) / √(C_μ)
@@ -36,7 +36,7 @@ nuTilda0 = 5.0e-5	##! Approx value in low turb. intensity windtunnel
 daOptions = {
     "solverName": "DASimpleFoam",
     "designSurfaces": ["optSurface"],		#! Updated to our desired surface (rear window/quarter)
-    "primalMinResTol": 1e-8,
+    "primalMinResTol": 1e-4,
     "primalMinResTolDiff": 1e3,
     "primalBC": {
         "U0": {"variable": "U", "patches": ["inlet"], "value": [U0, 0.0, 0.0]},
@@ -134,7 +134,10 @@ class Top(Multipoint):
 	## Assuming your FFD has dimensions [nx, ny, nz]
 	## Select rear portion: last 3 streamwise points, middle height points
 
-        indexList.extend(pts[-3:, 1:-1, :-1].flatten())
+        indexList.extend(pts[2, -1, 0:5].flatten())
+        indexList.extend(pts[6, -2, 0:5].flatten())
+        indexList.extend(pts[9, -3, 0:5].flatten())
+        indexList.extend(pts[13:19, -4, 0:5].flatten())
         PS = geo_utils.PointSelect("list", indexList)
         nShapes = self.geometry.nom_addLocalDV(dvName="shape", axis="y", pointSelect=PS)
 
@@ -222,7 +225,7 @@ class Top(Multipoint):
         self.connect("shape", "geometry.shape")
 
         # define the design variables
-        self.add_design_var("shape", lower=-0.5, upper=0.5, scaler=10.0)
+        self.add_design_var("shape", lower=-0.1, upper=0.1, scaler=1.0)
 
         # add objective and constraints to the top level
         self.add_objective("scenario1.aero_post.CD", scaler=1.0)

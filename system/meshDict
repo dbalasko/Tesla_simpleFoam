@@ -1,0 +1,235 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | cfMesh: A library for mesh generation          |
+|  \\    /   O peration     |                                                 |
+|   \\  /    A nd           | Author: Franjo Juretic                          |
+|    \\/     M anipulation  | E-mail: franjo.juretic@c-fields.com            |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      meshDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Main surface file (or you can merge them)
+surfaceFile "constant/triSurface/combined.stl";  // We'll create this
+
+// Base mesh cell size
+maxCellSize 0.5;  // Coarse far-field mesh
+
+// Boundary layer settings
+//boundaryCellSize 0.5;  // Cell size at surfaces
+
+// Boundary layers
+boundaryLayers
+{
+    patchBoundaryLayers
+    {
+        // Body boundary layer
+        "body"
+        {
+            nLayers           2;
+            thicknessRatio    1.3;
+            maxFirstLayerThickness 0.005;
+            allowDiscontinuity 0;
+        }
+
+	"optSurface"
+        {
+            nLayers           2;
+            thicknessRatio    1.3;
+            maxFirstLayerThickness 0.005;
+            allowDiscontinuity 0;
+        }
+
+
+        // Wheels boundary lay//        "Wheel.*"
+//        {
+//            nLayers           4;
+//            thicknessRatio    1.3;
+//            maxFirstLayerThickness 0.003;
+//            allowDiscontinuity 0;
+//        }
+    }
+
+    optimiseLayer 1;
+}
+
+// Local refinement
+localRefinement
+{
+    // Refinement around car body
+    "body"
+    {
+        cellSize 0.04;
+	refinementThickness 0.05;
+    }
+    
+    "optSurface"
+    {
+        cellSize 0.04;
+	refinementThickness 0.05;
+	
+    }
+
+    // Refinement around wheels
+    "wheel.*"
+    {
+        cellSize 0.02;
+        
+    }
+
+    // Wake region refinement box
+//    wake
+//    {
+//        cellSize 0.1;
+//    }
+
+    // Explicitly disable refinement at box boundaries
+//    xMin { cellSize 0.5; }
+//    xMax { cellSize 0.5; }
+//    yMin { cellSize 0.5; }
+//   yMax { cellSize 0.5; }
+//    zMin { cellSize 0.5; }
+//    zMax { cellSize 0.5; }
+}
+
+/*edgeMeshRefinement
+{
+    // Refinement around car body
+    "wheelFL"
+    {
+    
+    	edgeFile	"constant/extendedFeatureEdgeMesh/wheelFL_edgeMesh.obj";	
+        additionalRefinementLevels	6;
+	//refinementThickness 0.02;
+	
+    }
+    
+    "wheelRL"
+    {
+    
+    	edgeFile	"constant/extendedFeatureEdgeMesh/wheelRL_edgeMesh.obj";	
+        additionalRefinementLevels	6;
+	//refinementThickness 0.02;
+	
+    }
+
+}
+*/
+keepCellsIntersectingBoundary 0;
+
+// Refinement boxes for wake and other regions
+objectRefinements
+{
+    Box2
+    {
+        type box;
+        cellSize 0.4;
+        centre (28 0 0);
+        lengthX 8;
+        lengthY 5;
+        lengthZ 5;
+    }
+    // Wake region behind car
+    Box1
+    {
+        type box;
+        cellSize 0.2;
+        centre (28 0 0);
+        lengthX 6;
+        lengthY 4;
+        lengthZ 4;
+    }
+    wakeBox
+    {
+        type box;
+        cellSize 0.1;
+        centre (28 0 0);
+        lengthX 5.5;
+        lengthY 3.5;
+        lengthZ 3.5;
+    }
+    // Underbody refinement
+    underbody
+    {
+        type box;
+        cellSize 0.02;
+        centre (27.5 0 0);
+        lengthX 5;
+        lengthY 0.3;
+        lengthZ 2;
+    }
+    
+   /* wheelFL
+    {
+        type box;
+        cellSize 0.02;
+        centre (26 0.3 0.8);
+        lengthX 0.7;
+        lengthY 0.7;
+        lengthZ 0.4;
+    }
+    
+    wheelRL
+    {
+        type box;
+        cellSize 0.02;
+        centre (28.9 0.3 0.8);
+        lengthX 0.7;
+        lengthY 0.7;
+        lengthZ 0.4;
+    }*/
+    
+}
+
+// Rename boundary patches for the bounding box
+renameBoundary
+{
+    newPatchNames
+    {
+        "xMin"
+        {
+            newName inlet;
+            type    patch;
+        }
+
+        "xMax"
+        {
+            newName outlet;
+            type    patch;
+        }
+
+        "yMin"
+        {
+            newName wall;
+            type    wall;  // or wall
+        }
+
+        "yMax"
+        {
+            newName wall;
+            type    wall;  // or wall
+        }
+
+        "zMin"
+        {
+            newName symmetry;
+            type    symmetry;
+        }
+
+        "zMax"
+        {
+            newName symmetry;
+            type    symmetry;
+        }
+    }
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

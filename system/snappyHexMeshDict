@@ -70,43 +70,63 @@ geometry
     box4
     {
     	type searchableBox;
-	min (28 0 0);
-	max (34 1.6 1.5);
+	min (25 0 0);
+	max (30 0.2 0.95);
     }
 };
 
 castellatedMeshControls
 {
     maxLocalCells 100000;
-    maxGlobalCells 400000;
+    maxGlobalCells 5000000;
     minRefinementCells 0;
     nCellsBetweenLevels 3;
     
     features
     (
+    	{
+		file "../extendedFeatureEdgeMesh/body_edgeMesh.obj";
+		level 5;
+	}
+
+	{
+                file "../extendedFeatureEdgeMesh/optSurface_edgeMesh.obj";
+                level 4;
+        }
+
+	{
+                file "../extendedFeatureEdgeMesh/wheelFL_edgeMesh.obj";
+                level 4;
+        }
+
+	{
+                file "../extendedFeatureEdgeMesh/wheelRL_edgeMesh.obj";
+                level 4;
+        }
+    
     );
 
     refinementSurfaces
     {
         body
         {
-            level (4 5);
+            level (5 5);
         }
         
 	optSurface
         {
-            level (4 4);
+            level (5 5);
         }
         
-	wheelFL
-        {
-            level (4 4);
-        }
+	//wheelFL
+        //{
+        //    level (4 5);
+        //}
         
-	wheelRL
-        {
-            level (4 4);
-        }
+	//wheelRL
+        //{
+        //    level (4 5);
+        //}
     }
 
     refinementRegions
@@ -127,13 +147,13 @@ castellatedMeshControls
        {
              mode inside;
              levels ((3 3));
-       }
-
-       box4
-       {
-       	   mode inside;
-	   levels ((4 4)); 
        }*/
+
+       //box4
+       //{
+       //	   mode inside;
+	//	   levels ((6 6)); 
+      // }
     }
 
     locationInMesh	(15 1e-5 1e-5);
@@ -144,11 +164,11 @@ castellatedMeshControls
 snapControls
 {
 
-    nSmoothPatch 3;
+    nSmoothPatch 10;
     tolerance 0.5;
-    nSolveIter 100;
+    nSolveIter 300;
     nRelaxIter 10;
-    nFeatureSnapIter 15;     // More feature snapping
+    nFeatureSnapIter 20;     // More feature snapping
     implicitFeatureSnap false;  // Better edge detection
     explicitFeatureSnap true;
     multiRegionFeatureSnap false;
@@ -160,7 +180,7 @@ snapControls
 
 addLayersControls
 {
-    relativeSizes true;
+    relativeSizes false;
     layers
     {
         body
@@ -175,22 +195,22 @@ addLayersControls
 
         wheelFL
         {
-            nSurfaceLayers 3;
+            nSurfaceLayers 0;
         }
 
         wheelRL
         {
-            nSurfaceLayers 3;
+            nSurfaceLayers 0;
         }
     }
 
     expansionRatio 1.2;
-    finalLayerThickness 0.5;
-    minThickness 0.05;
+    finalLayerThickness 0.01;
+    minThickness 0.001;
     nGrow 0;
 
     // Advanced settings
-    featureAngle 60;
+    featureAngle 100;
     nRelaxIter 10;
     nSmoothSurfaceNormals 10;
     nSmoothNormals 10;

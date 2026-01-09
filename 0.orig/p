@@ -33,7 +33,7 @@ boundaryField
 
     wall
     {
-        type            slip;
+        type            zeroGradient;
     }
 
     body

@@ -14,10 +14,13 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-transportModel  Newtonian;
+transportModel Newtonian;
 
-nu              1.5e-05;
-Pr 		0.7;
+//nu 0.0000011070000000;
+//Pr 0.7;
 
+viscosityModel  constant;
+
+nu              [0 2 -1 0 0 0 0] 1.5e-05;
 
 // ************************************************************************* //
