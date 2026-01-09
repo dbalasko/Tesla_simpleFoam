@@ -84,6 +84,26 @@ castellatedMeshControls
     
     features
     (
+	{
+		file "../extendedFeatureEdgeMesh/body_edgeMesh.obj";
+		level 4;
+	}
+
+	{
+                file "../extendedFeatureEdgeMesh/optSurface_edgeMesh.obj";
+                level 4;
+        }
+
+	{
+                file "../extendedFeatureEdgeMesh/wheelFL_edgeMesh.obj";
+                level 4;
+        }
+
+	{
+                file "../extendedFeatureEdgeMesh/wheelRL_edgeMesh.obj";
+                level 4;
+        }
+
     );
 
     refinementSurfaces
@@ -100,12 +120,12 @@ castellatedMeshControls
         
 	wheelFL
         {
-            level (3 3);
+            level (4 4);
         }
         
 	wheelRL
         {
-            level (3 3);
+            level (4 4);
         }
     }
 
@@ -160,37 +180,37 @@ snapControls
 
 addLayersControls
 {
-    relativeSizes true;
+    relativeSizes false;
     layers
     {
         body
         {
-            nSurfaceLayers 3;
+            nSurfaceLayers 0;
         }
 
         optSurface
         {
-            nSurfaceLayers 3;
+            nSurfaceLayers 0;
         }
 
         wheelFL
         {
-            nSurfaceLayers 3;
+            nSurfaceLayers 0;
         }
 
         wheelRL
         {
-            nSurfaceLayers 3;
+            nSurfaceLayers 0;
         }
     }
 
     expansionRatio 1.2;
-    finalLayerThickness 0.5;
-    minThickness 0.05;
+    finalLayerThickness 0.01;
+    minThickness 0.001;
     nGrow 0;
 
     // Advanced settings
-    featureAngle 60;
+    featureAngle 100;
     nRelaxIter 10;
     nSmoothSurfaceNormals 10;
     nSmoothNormals 10;

@@ -1,10 +1,10 @@
-/*--------------------------------*- C++ -*----------------------------------*\
-  =========                 |
-  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  10
-     \\/     M anipulation  |
-\*---------------------------------------------------------------------------*/
+/*--------------------------------*- C++ -*---------------------------------*\ 
+| ========                 |                                                 | 
+| \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           | 
+|  \    /   O peration     | Version:  v1812                                 | 
+|   \  /    A nd           | Web:      www.OpenFOAM.com                      | 
+|    \/     M anipulation  |                                                 | 
+\*--------------------------------------------------------------------------*/ 
 FoamFile
 {
     version     2.0;
@@ -14,97 +14,54 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+SIMPLE
+{
+    consistent                         false;
+    nNonOrthogonalCorrectors           0;
+}
+
 solvers
 {
-    p
+    "(p|p_rgh|G)"
     {
-        solver          GAMG;
-        smoother        GaussSeidel;
-        tolerance       1e-8;              // Tighter tolerance
-        relTol          0.001;              // CRITICAL: Changed from 0.1!
         
-        // Add these GAMG parameters
-        nPreSweeps      0;
-        nPostSweeps     2;
-        nSweeps         2;
-        nFinestSweeps   2;
-        cacheAgglomeration true;
-        agglomerator    faceAreaPair;
-        nCellsInCoarsestLevel 20;
-        mergeLevels     1;
-        maxIter         100;               // Add iteration limit
+        solver                         GAMG;
+        smoother                       GaussSeidel;
+        relTol                         0.1;
+        tolerance                      0;
     }
-    
-    pFinal
-    {
-        $p;
-        relTol         0;
-        tolerance      1e-7;
-    }
-    
     Phi
     {
         $p;
+        relTol                         0;
+        tolerance                      1e-6;
     }
-    
-    "(U|k|omega|epsilon)"
+    "(U|T|e|h|nuTilda|k|omega|epsilon)"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-8;              // Tighter
-        relTol          0.1;               // This is OK for U,k,omega
-        maxIter         20;                // Add limit
+        solver                         smoothSolver;
+        smoother                       GaussSeidel;
+        relTol                         0.1;
+        tolerance                      0;
+        nSweeps                        1;
     }
-    
-    "(U|k|omega|epsilon)Final"
-    {
-        $U;
-        relTol          0;
-        tolerance       1e-8;
-    }
-}
-
-SIMPLE
-{
-    nNonOrthogonalCorrectors 2;        // Changed from 0!
-    consistent      yes;                // Add SIMPLEC
-    
-    residualControl
-    {
-        p               1e-6;            // Tighter than 1e-4
-        U               1e-6;            // Tighter
-        "(k|omega|epsilon)" 1e-6;       // Tighter
-    }
-    
-    pRefCell        0;
-    pRefValue       0;
-}
-
-"(PIMPLE|PISO)"
-{
-    nOuterCorrectors 1;
-    nCorrectors     2;
-    nNonOrthogonalCorrectors 1;
-    pRefCell        0;
-    pRefValue       0;
-}
-
-potentialFlow
-{
-    nNonOrthogonalCorrectors 10;
 }
 
 relaxationFactors
 {
     fields
     {
-        p               0.2;             // Good, keep this
+        "(p|p_rgh)"                    0.30;
     }
     equations
     {
-        U               0.6;             // Good
-        "(k|omega|epsilon)" 0.6;        // Good
+        "(U|T|e|h|nuTilda|k|epsilon|omega)" 0.70;
     }
 }
 
-// ************************************************************************* //
+potentialFlow
+{
+    nNonOrthogonalCorrectors           20;
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
