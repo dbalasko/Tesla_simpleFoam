@@ -44,7 +44,7 @@ def readPlot3D(filename):
     return x, y, z
 
 # Convert
-x, y, z = readPlot3D('teslaFFD.xyz')
+x, y, z = readPlot3D('FFD.xyz')
 
 # Write VTK
 gridToVTK(

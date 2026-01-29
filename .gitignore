@@ -1,54 +1,44 @@
-# Time directories
-[1-9]*
-[0-9][0-9]*
-[0-9].[0-9]*
+# Geometry files
+#*.stl
+*.obj
 
-# Processor directories
-processor*
+# Time directories (results)
+[0-9]*
+[0-9]*.[0-9]*
 
-# Mesh (will be regenerated)
-constant/polyMesh/
-constant/geometry/
-#constant/triSurface
-constant/extendedFeatureEdgeMesh
+# But keep 0/ directory (initial conditions)
+!0/
+!0/**
 
-# Intermediate/temporary STL files
-constant/triSurface/windtunnel.stl
-constant/triSurface/combined.stl
+# Also keep 0.orig/ directory (backup of initial conditions)
+!0.orig/
+!0.orig/**
+
+# Processor directories (parallel runs)
+processor*/
+
+# Log files
+log.*
+*.log
 
 # Post-processing
 postProcessing/
-VTK/
-*.vtk
-*.vtu
-*.vts
-
-# Log files
-log
-log.*
-*.log
-*.logfile
-/reports
-*.html
-
-# Backup files
-*~
-*.backup
-# *.bak
-
-
-# Python cache
-__pycache__/
-*.pyc
-
-# Paraview state files (optional)
-*.pvsm
-*.OpenFOAM
 
 # Dynamic code
 dynamicCode/
 
-# Geometry due to size limit
-Geom/
+# PyFoam logs
+PyFoam*/
 
+# VTK files (if you export)
+*.vtk
+*.vtu
 
+# Compiled files
+*.o
+*.so
+*.a
+
+# System backups
+*~
+*.swp

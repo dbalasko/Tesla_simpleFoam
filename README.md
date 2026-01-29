@@ -1,24 +1,18 @@
-# Tesla_simpleFoam
-Drag optimisation of a simplified Tesla model S with the DAFoam package
+# Ahmed body DAFoam optimization
+Drag optimisation of Ahmed Body with the DAFoam package
+
+![Alt text](animation/mesh.gif)
 
 ## Geometry Files
-
-Due to file size limitations, geometry files are hosted separately:
-
-**Download:** [LRZ Link](https://syncandshare.lrz.de/getlink/fiJyvQSdnxBFL1h5bAwA6j/)
 
 
 ## Quick Start
 ```bash
 # 1. Clone repository
-git clone https://github.com/dbalasko/Tesla_simpleFoam.git
-cd Tesla_simpleFoam
 
-# 2. Download geometry files from link above
-# Place them in constant/triSurface
 
 # 3. Generate mesh
-./Allclean
+
 ./preProcessing.sh
 
 # 4. Start docker for DAFoam
@@ -29,7 +23,7 @@ python3 FFD/genFFD.py
 # Can use convert_ffd_to_vtk.py to generate a file which can be viewed in paraview (sanity check)
 
 # 6. Run simulation
-mpirun -np 4 python runScript.py 2>&1 | tee logOpt.txt
+mpirun -np 32 python runScript.py 2>&1 | tee logOpt.txt
 
 
 ## Case Details

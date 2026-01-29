@@ -1,0 +1,25 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      sampleDict;
+}
+
+type surfaces;
+libs ("sampling");
+surfaceFormat raw;
+fields (p);
+interpolationScheme cellPoint;
+
+surfaces
+(
+    rampCut
+    {
+        type        cuttingPlane;
+        planeType   pointAndNormal;
+        point       (0.9 0 0.01);
+        normal      (0 0 1);  // YZ plane at centerline
+        interpolate true;
+    }
+);

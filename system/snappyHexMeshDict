@@ -22,10 +22,28 @@ addLayers       true;
 
 geometry
 {
-    body.stl
+    Ahmed_body_rear.stl
     {
         type triSurfaceMesh;
-	name body;
+	name optSurface;
+    }
+
+    Ahmed_body_rear_bottom.stl
+    {
+        type triSurfaceMesh;
+        name body;
+    }
+
+    Ahmed_body_rear_side.stl
+    {
+        type triSurfaceMesh;
+        name optSurface;
+    }
+
+    Ahmed_body_front.stl
+    {
+        type triSurfaceMesh;
+        name body;
     }
     
     optSurface.stl
@@ -85,9 +103,24 @@ castellatedMeshControls
     features
     (
 	{
-		file "../extendedFeatureEdgeMesh/body_edgeMesh.obj";
+		file "../extendedFeatureEdgeMesh/Ahmed_body_rear_edgeMesh.obj";
 		level 4;
 	}
+
+	{
+                file "../extendedFeatureEdgeMesh/Ahmed_body_rear_bottom_edgeMesh.obj";
+                level 4;
+        }
+
+	{
+                file "../extendedFeatureEdgeMesh/Ahmed_body_rear_side_edgeMesh.obj";
+                level 4;
+        }
+
+	{
+                file "../extendedFeatureEdgeMesh/Ahmed_body_front_edgeMesh.obj";
+                level 4;
+        }
 
 	{
                 file "../extendedFeatureEdgeMesh/optSurface_edgeMesh.obj";

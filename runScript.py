@@ -21,22 +21,17 @@ args = parser.parse_args()
 # Input Parameters
 # =============================================================================
 
-U0 = 1.179	#! Inlet velocity
-A0 = 1.55 	##! TODO Find actual frontal area, but approximately around 2.1 m^2 from internet
-		## NOTE: WE NEED ONLY HALF THE AREA; SINCE WE SIMULATE HALF CAR
-
+U0 = 1.0	#! Inlet velocity
+A0 = 1.157275 
 p0 = 0.0	#! Since incompressible
 nuTilda0 = 1.0e-4	##! Approx value in low turb. intensity windtunnel
-
-## nuTilda (Turbulent viscosity) should be 3-5 * nu_air approx.
-## μ_t/μ ≈ (3/2) × (I × Re_L)^(3/2) / √(C_μ)
 
 
 # Set the parameters for optimization
 daOptions = {
     "solverName": "DASimpleFoam",
     "designSurfaces": ["optSurface"],		#! Updated to our desired surface (rear window/quarter)
-    "primalMinResTol": 1e-5,
+    "primalMinResTol": 1e-6,
     "primalMinResTolDiff": 1e3,
     "primalBC": {
         "U0": {"variable": "U", "patches": ["inlet"], "value": [U0, 0.0, 0.0]},
@@ -48,14 +43,14 @@ daOptions = {
         "CD": {
             "type": "force",
             "source": "patchToFace",
-            "patches": ["optSurface"],	#! Updated patches
+            "patches": ["body", "optSurface", "wheelFL", "wheelRL"],	#! Updated patches
             "directionMode": "fixedDirection",
             "direction": [1.0, 0.0, 0.0],
             "scale": 1.0 / 0.5 / U0 / U0 / A0,
         },
     },
     "normalizeStates": {"U": 1.0, "p": 1.0, "nuTilda": 1e-4, "phi": 1.0},
-    "adjEqnOption": {"gmresRelTol": 1.0e-4, "pcFillLevel": 2, "jacMatReOrdering": "rcm", "gmresAbsTol": 1.0e-10, "gmresMaxIters": 2000, "gmresRestart": 30},
+    "adjEqnOption": {"gmresRelTol": 1.0e-4, "pcFillLevel": 2, "jacMatReOrdering": "rcm", "gmresAbsTol": 1.0e-10, "gmresMaxIters": 2000, "gmresRestart": 300},
     "adjPCLag": 1,
     # Design variable setup
     "inputInfo": {
@@ -63,8 +58,6 @@ daOptions = {
     },
 }
 
-
-##! TODO not sure if we need this, as simulating a symmetry condition already?
 # mesh warping parameters, users need to manually specify the symmetry plane
 meshOptions = {
     "gridFile": os.getcwd(),
@@ -90,7 +83,7 @@ class Top(Multipoint):
 
         # add the geometry component (FFD)
         #! Updated the FFD to be around our optimsation surface, increased number of points
-        self.add_subsystem("geometry", OM_DVGEOCOMP(file="FFD/teslaFFD.xyz", type="ffd"))
+        self.add_subsystem("geometry", OM_DVGEOCOMP(file="FFD/FFD.xyz", type="ffd"))
 
         # add a scenario (flow condition) for optimization, we pass the builder
         # to the scenario to actually run the flow and adjoint
@@ -121,16 +114,15 @@ class Top(Multipoint):
         pts = self.geometry.DVGeo.getLocalIndex(0)
         indexList = []
 
-	## CODE changed
 	## Select rear section FFD points
 	## Assuming your FFD has dimensions [nx, ny, nz]
 	## Select rear portion: last 3 streamwise points, middle height points
 
-        indexList.extend(pts[2, 2, 0].flatten())
+        indexList.extend(pts[1:4, 1:6, 0:3].flatten())
         PS = geo_utils.PointSelect("list", indexList)
         nShapes = self.geometry.nom_addLocalDV(dvName="shape", axis="y", pointSelect=PS)
 
-        ##? No need for reflection constraint, since we simulate just half of the car
+        ##? Reflection constrain might be needed for full body simulation
 
         ## indSetA = []
         ## indSetB = []
@@ -141,72 +133,6 @@ class Top(Multipoint):
         ## self.geometry.nom_addLinearConstraintsShape("reflect", indSetA, indSetB, factorA=1.0, factorB=1.0)
 
         # setup the volume and thickness constraints
-        ##? For TESTING PURPOSE NO CONSTRAINT IS USED (WE MIGHT USE CONSTRAINT FOR VOLUME)
-
-        ##leList = [
-        ##    [4.90000000, 0.00000000, -0.41149880],
-        ##    [4.90000000, 0.00000000, -0.40347270],
-        ##    [4.90000000, 0.00000000, -0.38803330],
-        ##    [4.90000000, 0.00000000, -0.36534750],
-        ##    [4.90000000, 0.00000000, -0.33601030],
-        ##    [4.90000000, 0.00000000, -0.31016020],
-        ##    [4.90000000, 0.00000000, -0.28327050],
-        ##    [4.90000000, 0.00000000, -0.26248810],
-        ##    [4.90000000, 0.00000000, -0.24076410],
-        ##    [4.90000000, 0.00000000, -0.20933480],
-        ##    [4.90000000, 0.00000000, -0.17458840],
-        ##    [4.90000000, 0.00000000, -0.14233480],
-        ##    [4.90000000, 0.00000000, -0.11692880],
-        ##    [4.90000000, 0.00000000, -0.09984235],
-        ##    [4.90000000, 0.00000000, -0.08874606],
-        ##    [4.90000000, 0.00000000, -0.07969946],
-        ##    [4.90000000, 0.00000000, -0.06954966],
-        ##    [4.90000000, 0.00000000, -0.05864429],
-        ##    [4.90000000, 0.00000000, -0.04829308],
-        ##    [4.90000000, 0.00000000, -0.03831457],
-        ##    [4.90000000, 0.00000000, -0.02430242],
-        ##    [4.90000000, 0.00000000, -0.00100000],
-        ##]
-        ##teList = [
-        ##    [6.70332700, 0.00000000, -0.41149880],
-        ##    [6.73692400, 0.00000000, -0.40347270],
-        ##    [6.76842800, 0.00000000, -0.38803330],
-        ##    [6.79426000, 0.00000000, -0.36534750],
-        ##    [6.81342600, 0.00000000, -0.33601030],
-        ##    [6.83648300, 0.00000000, -0.31016020],
-        ##    [6.85897100, 0.00000000, -0.28327050],
-        ##    [6.83593600, 0.00000000, -0.26248810],
-        ##    [6.80929800, 0.00000000, -0.24076410],
-        ##    [6.79395800, 0.00000000, -0.20933480],
-        ##    [6.79438900, 0.00000000, -0.17458840],
-        ##    [6.80874100, 0.00000000, -0.14233480],
-        ##    [6.83265000, 0.00000000, -0.11692880],
-        ##    [6.86250800, 0.00000000, -0.09984235],
-        ##    [6.89566400, 0.00000000, -0.08874606],
-        ##    [6.92987100, 0.00000000, -0.07969946],
-        ##    [6.96333200, 0.00000000, -0.06954966],
-        ##    [6.99621200, 0.00000000, -0.05864429],
-        ##    [7.02921500, 0.00000000, -0.04829308],
-        ##    [7.06253200, 0.00000000, -0.03831457],
-        ##    [7.09456600, 0.00000000, -0.02430242],
-        ##    [7.12000000, 0.00000000, -0.00100000],
-        ##]
-        ## self.geometry.nom_addVolumeConstraint("volcon", leList, teList, nSpan=25, nChord=50)
-
-        # Thickness constraint for lateral thickness
-        ##? For TESTING PURPOSE NO CONSTRAINT
-
-        ## leList = [[5.01, 0.0000, -0.001], [5.01, 0.0000, -0.410]]
-        ## teList = [[6.2, 0.0000, -0.001], [6.2, 0.0000, -0.410]]
-        ## self.geometry.nom_addThicknessConstraints2D("thickcon1", leList, teList, nSpan=8, nChord=5)
-
-        # Thickness constraint for propeller shaft
-        ##? For TESTING PURPOSE NO CONSTRAINT
-
-        ## leList = [[6.8, 0.0000, -0.302], [6.8, 0.0000, -0.265]]
-        ## teList = [[6.865, 0.0000, -0.302], [6.865, 0.0000, -0.265]]
-        ## self.geometry.nom_addThicknessConstraints2D("thickcon2", leList, teList, nSpan=5, nChord=5)
-
 
         # add the design variables to the dvs component's output
         self.dvs.add_output("shape", val=np.array([0] * nShapes))
@@ -219,18 +145,9 @@ class Top(Multipoint):
         # add objective and constraints to the top level
         self.add_objective("scenario1.aero_post.CD", scaler=1.0)
 
-	##? NO CONSTRAINTS
-
-        ## self.add_constraint("geometry.thickcon1", lower=1e-3, upper=1.125, scaler=1.0)
-        ## self.add_constraint("geometry.thickcon2", lower=1.0, upper=10.0, scaler=1.0)
-        ## self.add_constraint("geometry.volcon", lower=1.0, scaler=1.0)
-
-	##? No need, since only half car is simulated
+	## NO CONSTRAINTS - since half car sim
 
         ## self.add_constraint("geometry.reflect", equals=0.0, scaler=1.0, linear=True)
-
-
-#! Don't need to change anything below I believe
 
 # OpenMDAO setup
 prob = om.Problem()

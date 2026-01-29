@@ -1,0 +1,30 @@
+ solid PRO2STL version 1.0
+ facet normal 0 0 1
+ outer loop 
+ vertex 30.22 0.25 0.9725
+ vertex 29.214 1.44 0.9725
+ vertex 29.214 0.845 0.9725
+ endloop
+ endfacet
+ facet normal 0 0 1
+ outer loop 
+ vertex 29.717 1.205447021 0.9725
+ vertex 29.214 1.44 0.9725
+ vertex 30.22 0.25 0.9725
+ endloop
+ endfacet
+ facet normal 0 0 1
+ outer loop 
+ vertex 29.214 0.845 0.9725
+ vertex 29.214 0.25 0.9725
+ vertex 30.22 0.25 0.9725
+ endloop
+ endfacet
+ facet normal 0 0 1
+ outer loop 
+ vertex 30.22 0.25 0.9725
+ vertex 30.22 0.9708939819 0.9725
+ vertex 29.717 1.205447021 0.9725
+ endloop
+ endfacet
+endsolid PRO2STL version 1.0
