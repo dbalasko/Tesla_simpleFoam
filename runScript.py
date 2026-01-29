@@ -21,7 +21,7 @@ args = parser.parse_args()
 # Input Parameters
 # =============================================================================
 
-U0 = 1.0	#! Inlet velocity
+U0 = 20.0	#! Inlet velocity
 A0 = 1.157275 
 p0 = 0.0	#! Since incompressible
 nuTilda0 = 1.0e-4	##! Approx value in low turb. intensity windtunnel
